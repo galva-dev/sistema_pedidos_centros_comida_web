@@ -25,7 +25,7 @@ class UserLogged with ChangeNotifier {
     CentroComida centro = CentroComida();
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -53,7 +53,7 @@ class UserLogged with ChangeNotifier {
     User admin = User();
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -86,7 +86,7 @@ class UserLogged with ChangeNotifier {
     List<User> empleados = [];
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -142,7 +142,7 @@ class UserLogged with ChangeNotifier {
     List<Food> bebidas = [];
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -173,7 +173,7 @@ class UserLogged with ChangeNotifier {
     List<Food> menu = [];
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -202,7 +202,7 @@ class UserLogged with ChangeNotifier {
     List<Mesas> mesas = [];
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -228,7 +228,7 @@ class UserLogged with ChangeNotifier {
     List<Food> comida = [];
 
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:sistema_registro_pedidos_web/Models/User.dart';
-import 'package:sistema_registro_pedidos_web/Widgets/DetailSide.dart';
-import 'package:sistema_registro_pedidos_web/Widgets/SwitcherSide.dart';
+import 'package:sistema_registro_pedidos_web/Widgets/SignIn/DetailSide.dart';
+import 'package:sistema_registro_pedidos_web/Widgets/SignIn/SwitcherSide.dart';
 import 'package:http/http.dart' as http;
 
 class SignInPage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _SignInPageState extends State<SignInPage>
 
   Future _getEmpleados() async {
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
@@ -76,7 +76,7 @@ class _SignInPageState extends State<SignInPage>
 
   Future _getAdmin() async {
     final uri = Uri.parse(
-        "https://ejemplodb-5afcd-default-rtdb.firebaseio.com/CentroComida.json");
+        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
