@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:sistema_registro_pedidos_web/Models/User.dart';
 import 'package:sistema_registro_pedidos_web/Responsive/Responsive.dart';
+import 'package:sistema_registro_pedidos_web/Utils/FirebaseCrud.dart';
 
 class Body extends StatefulWidget {
   User usuario = User();
@@ -113,7 +114,10 @@ class _BodyState extends State<Body> {
                             ? ClipRRect(
                                 borderRadius: BorderRadius.circular(25),
                                 child: TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    //todo CODIGO DE LA ACTUALIZACION DE LA CONTRA
+                                    FirebaseCrud.modificarPassword(context, nuevaContrasenia, this.widget.usuario.cc, this.widget.usuario.rNro);
+                                  },
                                   style: ButtonStyle(
                                     backgroundColor:
                                         MaterialStateProperty.all(Colors.yellow.shade700),

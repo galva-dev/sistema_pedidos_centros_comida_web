@@ -10,6 +10,7 @@ class User {
   String respuestaRecuperacion;
   String telefono;
   int cc;
+  int rNro = 0;
 
   User(
       {this.apellido,
@@ -22,5 +23,6 @@ class User {
       this.preguntaRecuperacion,
       this.respuestaRecuperacion,
       this.telefono,
-      this.cc});
+      this.cc,
+      this.rNro});
 }

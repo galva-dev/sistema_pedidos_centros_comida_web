@@ -38,10 +38,34 @@ class FirebaseCrud {
     await db
         .child('CC$nro')
         .child('Mesas')
-        .child('M${nroMesa+1}')
+        .child('M${nroMesa + 1}')
         .update({'disponible': disponible}).then((value) => print('Mesa modificada'));
     await Provider.of<UserLogged>(context, listen: false).actualizarMesas().then((value) {
       Navigator.of(context).pop();
     });
+  }
+
+  static void modificarPassword(BuildContext context, String nuevaContra, int nro, int rNro) async {
+    String tipoUsuario = Provider.of<UserLogged>(context, listen: false).typeUser;
+
+    final db = FirebaseDatabaseWeb.instance.reference().child('CentroComida');
+    if (tipoUsuario == "Admin") {
+      await db
+          .child('CC$nro')
+          .child('Admin')
+          .update({'password': nuevaContra}).then((value) => print('Password modificado'));
+      await Provider.of<UserLogged>(context, listen: false).getAdmin().then((value) {
+        Navigator.of(context).pop();
+      });
+    } else {
+      await db
+          .child('CC$nro')
+          .child('Recepcionistas')
+          .child('R$rNro')
+          .update({'password': nuevaContra}).then((value) => print('Password modificado'));
+      await Provider.of<UserLogged>(context, listen: false).getEmpleados().then((value) {
+        Navigator.of(context).pop();
+      });
+    }
   }
 }

@@ -100,7 +100,6 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
             margin: EdgeInsets.only(right: 50, top: 20),
             child: ElevatedButton(
               onPressed: () {
-                //todo codigo alerta cerrar sesion
                 _showCerrarSesion();
               },
               child: Container(
