@@ -21,16 +21,88 @@ class UserLogged with ChangeNotifier {
   List<Mesas> _mesas = [];
   List<Pedido> _pedidos = [];
 
-  Future actualizarCentroComidaActual() async {
-    CentroComida centro = CentroComida();
+  List<User> loginempleados = [];
+  List<User> loginadmin = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+  Future getEmpleados() async {
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      Map jsonData = json.decode(body);
+
+      loginempleados.clear();
+      for (int i = 1; i <= jsonData.length; i++) {
+        for (int j = 1; j <= jsonData['CC$i']['Recepcionistas'].length; j++) {
+          loginempleados.add(
+            User(
+              nombre: jsonData['CC$i']['Recepcionistas']['R$j']['nombre'].toString(),
+              apellido: jsonData['CC$i']['Recepcionistas']['R$j']['apellido'].toString(),
+              ci: jsonData['CC$i']['Recepcionistas']['R$j']['ci'].toString(),
+              correo: jsonData['CC$i']['Recepcionistas']['R$j']['correo'].toString(),
+              domicilio: jsonData['CC$i']['Recepcionistas']['R$j']['domicilio'].toString(),
+              horario: jsonData['CC$i']['Recepcionistas']['R$j']['horario'].toString(),
+              password: jsonData['CC$i']['Recepcionistas']['R$j']['password'].toString(),
+              preguntaRecuperacion:
+                  jsonData['CC$i']['Recepcionistas']['R$j']['preguntaRecuperacion'].toString(),
+              respuestaRecuperacion:
+                  jsonData['CC$i']['Recepcionistas']['R$j']['respuestaRecuperacion'].toString(),
+              telefono: jsonData['CC$i']['Recepcionistas']['R$j']['telefono'].toString(),
+              cc: jsonData['CC$i']['Recepcionistas']['R$j']['cc'],
+              rNro: jsonData['CC$i']['Recepcionistas']['R$j']['rNro'],
+            ),
+          );
+        }
+      }
+    }
+    print('Empleados total: ${loginempleados.length}');
+  }
+
+  Future getAdmin() async {
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      Map jsonData = json.decode(body);
+
+      loginadmin.clear();
+      for (int i = 1; i <= jsonData.length; i++) {
+        loginadmin.add(
+          User(
+            nombre: jsonData['CC$i']['Admin']['nombre'].toString(),
+            apellido: jsonData['CC$i']['Admin']['apellido'].toString(),
+            ci: jsonData['CC$i']['Admin']['ci'].toString(),
+            correo: jsonData['CC$i']['Admin']['correo'].toString(),
+            domicilio: jsonData['CC$i']['Admin']['domicilio'].toString(),
+            horario: jsonData['CC$i']['Admin']['horario'].toString(),
+            password: jsonData['CC$i']['Admin']['password'].toString(),
+            preguntaRecuperacion: jsonData['CC$i']['Admin']['preguntaRecuperacion'].toString(),
+            respuestaRecuperacion: jsonData['CC$i']['Admin']['respuestaRecuperacion'].toString(),
+            telefono: jsonData['CC$i']['Admin']['telefono'].toString(),
+            cc: jsonData['CC$i']['Admin']['cc'],
+          ),
+        );
+      }
+      print('Admin total: ${loginadmin.length}');
+    }
+  }
+
+  Future actualizarCentroComidaActual() async {
+    CentroComida centro = CentroComida();
+
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       centro = CentroComida(
@@ -52,13 +124,13 @@ class UserLogged with ChangeNotifier {
   Future actualizarAdmin() async {
     User admin = User();
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       admin = User(
@@ -69,10 +141,8 @@ class UserLogged with ChangeNotifier {
         correo: jsonData['CC$_nroCentro']['Admin']['correo'],
         domicilio: jsonData['CC$_nroCentro']['Admin']['domicilio'],
         password: jsonData['CC$_nroCentro']['Admin']['password'],
-        preguntaRecuperacion: jsonData['CC$_nroCentro']['Admin']
-            ['preguntaRecuperacion'],
-        respuestaRecuperacion: jsonData['CC$_nroCentro']['Admin']
-            ['respuestaRecuperacion'],
+        preguntaRecuperacion: jsonData['CC$_nroCentro']['Admin']['preguntaRecuperacion'],
+        respuestaRecuperacion: jsonData['CC$_nroCentro']['Admin']['respuestaRecuperacion'],
         telefono: jsonData['CC$_nroCentro']['Admin']['telefono'],
       );
     }
@@ -85,49 +155,35 @@ class UserLogged with ChangeNotifier {
     _recepcionistas.clear();
     List<User> empleados = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       empleados.clear();
-      for (int j = 1;
-          j <= jsonData['CC$_nroCentro']['Recepcionistas'].length;
-          j++) {
+      for (int j = 1; j <= jsonData['CC$_nroCentro']['Recepcionistas'].length; j++) {
         empleados.add(
           User(
-            nombre: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['nombre']
+            nombre: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['nombre'].toString(),
+            apellido: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['apellido'].toString(),
+            ci: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['ci'].toString(),
+            correo: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['correo'].toString(),
+            domicilio: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['domicilio'].toString(),
+            horario: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['horario'].toString(),
+            password: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['password'].toString(),
+            preguntaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
+                    ['preguntaRecuperacion']
                 .toString(),
-            apellido: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['apellido']
+            respuestaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
+                    ['respuestaRecuperacion']
                 .toString(),
-            ci: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['ci']
-                .toString(),
-            correo: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['correo']
-                .toString(),
-            domicilio: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['domicilio']
-                .toString(),
-            horario: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['horario']
-                .toString(),
-            password: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['password']
-                .toString(),
-            preguntaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']
-                    ['R$j']['preguntaRecuperacion']
-                .toString(),
-            respuestaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']
-                    ['R$j']['respuestaRecuperacion']
-                .toString(),
-            telefono: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['telefono']
-                .toString(),
+            telefono: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['telefono'].toString(),
             cc: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['cc'],
+            rNro: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['rNro'],
           ),
         );
       }
@@ -141,24 +197,22 @@ class UserLogged with ChangeNotifier {
     _bebidas.clear();
     List<Food> bebidas = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       for (int j = 1; j <= jsonData['CC$_nroCentro']['Bebidas'].length; j++) {
         bebidas.add(
           Food(
-            descripcion: jsonData['CC$_nroCentro']['Bebidas']['B$j']
-                ['descripcion'],
+            descripcion: jsonData['CC$_nroCentro']['Bebidas']['B$j']['descripcion'],
             img: jsonData['CC$_nroCentro']['Bebidas']['B$j']['img'],
             nombre: jsonData['CC$_nroCentro']['Bebidas']['B$j']['nombre'],
-            precio: double.parse(
-                jsonData['CC$_nroCentro']['Bebidas']['B$j']['precio']),
+            precio: double.parse(jsonData['CC$_nroCentro']['Bebidas']['B$j']['precio']),
           ),
         );
       }
@@ -172,13 +226,13 @@ class UserLogged with ChangeNotifier {
     _menu.clear();
     List<Food> menu = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       for (int j = 1; j <= jsonData['CC$_nroCentro']['Menu'].length; j++) {
@@ -201,22 +255,20 @@ class UserLogged with ChangeNotifier {
     _mesas.clear();
     List<Mesas> mesas = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       for (int j = 1; j <= jsonData['CC$_nroCentro']['Mesas'].length; j++) {
-        mesas.add(
-          Mesas(
-              nro: jsonData['CC$_nroCentro']['Mesas']['M$j']['nro'],
-              disponible: jsonData['CC$_nroCentro']['Mesas']['M$j']['disponible'],
-          )
-        );
+        mesas.add(Mesas(
+          nro: jsonData['CC$_nroCentro']['Mesas']['M$j']['nro'],
+          disponible: jsonData['CC$_nroCentro']['Mesas']['M$j']['disponible'],
+        ));
       }
     }
     _mesas = mesas;
@@ -227,52 +279,43 @@ class UserLogged with ChangeNotifier {
   Future actualizarPedidos() async {
     List<Food> comida = [];
 
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
     final response = await http.get(uri);
 
     if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
       Map jsonData = json.decode(body);
 
       _pedidos.clear();
       for (int i = 1; i <= jsonData['CC$_nroCentro']['Pedidos'].length; i++) {
-        for (int j = 1;
-            j <= jsonData['CC$_nroCentro']['Pedidos']['P$i']['Comidas'].length;
-            j++) {
+        for (int j = 1; j <= jsonData['CC$_nroCentro']['Pedidos']['P$i']['Comidas'].length; j++) {
           comida.add(
             Food(
-                nombre: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']
-                        ['nombre']
-                    .toString(),
-                descripcion: jsonData['CC$i']['Pedidos']['P$i']['Comidas']
-                        ['C$j']['descripcion']
-                    .toString(),
-                img: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['img']
-                    .toString(),
-                precio: double.parse(jsonData['CC$i']['Pedidos']['P$i']
-                    ['Comidas']['C$j']['precio']),
-                cantidad: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']
-                    ['cantidad']),
+                nombre: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['nombre'].toString(),
+                descripcion:
+                    jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['descripcion'].toString(),
+                img: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['img'].toString(),
+                precio:
+                    double.parse(jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['precio']),
+                cantidad: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['cantidad']),
           );
         }
 
-        _pedidos.add(
-          Pedido(
-            ciRecepcionista: jsonData['CC$_nroCentro']['Pedidos']['P$i']['ciRecepcionista'],
-            codigo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['codigo'],
-            comidas: comida,
-            estado: jsonData['CC$_nroCentro']['Pedidos']['P$i']['estado'],
-            fecha: jsonData['CC$_nroCentro']['Pedidos']['P$i']['fecha'],
-            hora: jsonData['CC$_nroCentro']['Pedidos']['P$i']['hora'],
-            nroMesa: jsonData['CC$_nroCentro']['Pedidos']['P$i']['nro'],
-            tiempo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['tiempo'],
-            total: double.parse(jsonData['CC$_nroCentro']['Pedidos']['P$i']['total']),
-            usuarioEmail: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['email'],
-            usuarioUsername: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['username'],
-          )
-        );
+        _pedidos.add(Pedido(
+          ciRecepcionista: jsonData['CC$_nroCentro']['Pedidos']['P$i']['ciRecepcionista'],
+          codigo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['codigo'],
+          comidas: comida,
+          estado: jsonData['CC$_nroCentro']['Pedidos']['P$i']['estado'],
+          fecha: jsonData['CC$_nroCentro']['Pedidos']['P$i']['fecha'],
+          hora: jsonData['CC$_nroCentro']['Pedidos']['P$i']['hora'],
+          nroMesa: jsonData['CC$_nroCentro']['Pedidos']['P$i']['nro'],
+          tiempo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['tiempo'],
+          total: double.parse(jsonData['CC$_nroCentro']['Pedidos']['P$i']['total']),
+          usuarioEmail: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['email'],
+          usuarioUsername: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['username'],
+        ));
         comida.clear();
       }
     }
@@ -284,7 +327,7 @@ class UserLogged with ChangeNotifier {
 
   int get nroCentro => _nroCentro;
 
-  set nroCentro(int value){
+  set nroCentro(int value) {
     _nroCentro = value;
   }
 
@@ -354,4 +397,12 @@ class UserLogged with ChangeNotifier {
     _pedidos = value;
     notifyListeners();
   }
+
+  List<User> get getLoginempleados => this.loginempleados;
+
+  set setLoginempleados(List<User> loginempleados) => this.loginempleados = loginempleados;
+
+  List<User> get getLoginadmin => this.loginadmin;
+
+  set setLoginadmin(loginadmin) => this.loginadmin = loginadmin;
 }

@@ -14,7 +14,10 @@ class NavBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text(this.nombreCompleto),
+          Text(
+            this.nombreCompleto,
+            style: TextStyle(color: Colors.white, fontSize: 15),
+          ),
           SizedBox(
             width: 10,
           ),
@@ -22,7 +25,7 @@ class NavBar extends StatelessWidget {
           Row(
             children: [
               TextButton(
-                onPressed: (){
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
@@ -5,13 +6,13 @@ import 'package:sistema_registro_pedidos_web/Models/User.dart';
 import 'package:sistema_registro_pedidos_web/Pages/ForgotPasswordPage.dart';
 import 'package:sistema_registro_pedidos_web/Providers/UserLogged.dart';
 import 'package:sistema_registro_pedidos_web/Widgets/Alertas/AdvancedAlertDialog.dart';
+import 'package:http/http.dart' as http;
+
 
 class DetailSide extends StatefulWidget {
   final Animation<double> _animation;
-  List<User> empleado = [];
-  List<User> admin = [];
 
-  DetailSide({Key key, @required Animation<double> animation, this.empleado, this.admin})
+  DetailSide({Key key, @required Animation<double> animation})
       : _animation = animation,
         super(key: key);
 
@@ -27,6 +28,8 @@ class _DetailSideState extends State<DetailSide> {
   @override
   void initState() {
     super.initState();
+    Provider.of<UserLogged>(context, listen: false).getAdmin();
+    Provider.of<UserLogged>(context, listen: false).getEmpleados();
   }
 
   void _toggleVisible() {
@@ -164,8 +167,9 @@ class _DetailSideState extends State<DetailSide> {
                           Icon(FontAwesome.frown_o),
                         );
                       } else {
+                        List<User> admin = _userLogged.getLoginadmin;
                         bool exist = false;
-                        this.widget.admin.forEach((element) {
+                        admin.forEach((element) {
                           if (element.ci == ci) {
                             User usuario = User(
                               apellido: element.apellido,
@@ -180,6 +184,7 @@ class _DetailSideState extends State<DetailSide> {
                               respuestaRecuperacion: element.respuestaRecuperacion,
                               telefono: element.telefono,
                             );
+                            _userLogged.typeUser = 'Admin';
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -214,8 +219,9 @@ class _DetailSideState extends State<DetailSide> {
                             "Introduzca su CI para comenzar el proceso de restablecer su contraseña",
                             Icon(FontAwesome.frown_o));
                       } else {
+                        List<User> empleados = _userLogged.getLoginempleados;
                         bool exist = false;
-                        this.widget.empleado.forEach((element) {
+                        empleados.forEach((element) {
                           if (element.ci == ci) {
                             User usuario = User(
                               apellido: element.apellido,
@@ -229,7 +235,9 @@ class _DetailSideState extends State<DetailSide> {
                               preguntaRecuperacion: element.preguntaRecuperacion,
                               respuestaRecuperacion: element.respuestaRecuperacion,
                               telefono: element.telefono,
+                              rNro: element.rNro
                             );
+                            _userLogged.typeUser = 'Empleado';
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -270,8 +278,9 @@ class _DetailSideState extends State<DetailSide> {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
+                        List<User> admin = _userLogged.getLoginadmin;
                         bool exist = false;
-                        this.widget.admin.forEach((element) {
+                        admin.forEach((element) {
                           if (element.ci == ci) {
                             if (element.password == password) {
                               _userLogged.userActually = User(
@@ -321,8 +330,9 @@ class _DetailSideState extends State<DetailSide> {
                     ),
                     child: ElevatedButton(
                       onPressed: () {
+                        List<User> empleados = _userLogged.getLoginempleados;
                         bool exist = false;
-                        this.widget.empleado.forEach((element) {
+                        empleados.forEach((element) {
                           if (element.ci == ci) {
                             if (element.password == password) {
                               _userLogged.userActually = User(

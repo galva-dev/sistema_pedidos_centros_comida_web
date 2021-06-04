@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:sistema_registro_pedidos_web/Models/User.dart';
 import 'package:sistema_registro_pedidos_web/Widgets/SignIn/DetailSide.dart';
 import 'package:sistema_registro_pedidos_web/Widgets/SignIn/SwitcherSide.dart';
-import 'package:http/http.dart' as http;
-
 class SignInPage extends StatefulWidget {
   const SignInPage({Key key}) : super(key: key);
 
@@ -26,88 +22,7 @@ class _SignInPageState extends State<SignInPage>
   double newRange;
   double newValue;
 
-  List<User> empleados = [];
-  List<User> admin = [];
-
-  Future _getEmpleados() async {
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      empleados.clear();
-      for (int i = 1; i <= jsonData.length; i++) {
-        for (int j = 1; j <= jsonData['CC$i']['Recepcionistas'].length; j++) {
-          empleados.add(
-            User(
-              nombre: jsonData['CC$i']['Recepcionistas']['R$j']['nombre']
-                  .toString(),
-              apellido: jsonData['CC$i']['Recepcionistas']['R$j']['apellido']
-                  .toString(),
-              ci: jsonData['CC$i']['Recepcionistas']['R$j']['ci'].toString(),
-              correo: jsonData['CC$i']['Recepcionistas']['R$j']['correo']
-                  .toString(),
-              domicilio: jsonData['CC$i']['Recepcionistas']['R$j']['domicilio']
-                  .toString(),
-              horario: jsonData['CC$i']['Recepcionistas']['R$j']['horario']
-                  .toString(),
-              password: jsonData['CC$i']['Recepcionistas']['R$j']['password']
-                  .toString(),
-              preguntaRecuperacion: jsonData['CC$i']['Recepcionistas']['R$j']
-                      ['preguntaRecuperacion']
-                  .toString(),
-              respuestaRecuperacion: jsonData['CC$i']['Recepcionistas']['R$j']
-                      ['respuestaRecuperacion']
-                  .toString(),
-              telefono: jsonData['CC$i']['Recepcionistas']['R$j']['telefono']
-                  .toString(),
-              cc: jsonData['CC$i']['Recepcionistas']['R$j']['cc'],
-            ),
-          );
-        }
-      }
-    }
-    print('Empleados total: ${empleados.length}');
-  }
-
-  Future _getAdmin() async {
-    final uri = Uri.parse(
-        "https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body = utf8.decode(response
-          .bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      admin.clear();
-      for (int i = 1; i <= jsonData.length; i++) {
-        admin.add(
-          User(
-            nombre: jsonData['CC$i']['Admin']['nombre'].toString(),
-            apellido: jsonData['CC$i']['Admin']['apellido'].toString(),
-            ci: jsonData['CC$i']['Admin']['ci'].toString(),
-            correo: jsonData['CC$i']['Admin']['correo'].toString(),
-            domicilio: jsonData['CC$i']['Admin']['domicilio'].toString(),
-            horario: jsonData['CC$i']['Admin']['horario'].toString(),
-            password: jsonData['CC$i']['Admin']['password'].toString(),
-            preguntaRecuperacion:
-                jsonData['CC$i']['Admin']['preguntaRecuperacion'].toString(),
-            respuestaRecuperacion:
-                jsonData['CC$i']['Admin']['respuestaRecuperacion'].toString(),
-            telefono: jsonData['CC$i']['Admin']['telefono'].toString(),
-            cc: jsonData['CC$i']['Admin']['cc'],
-          ),
-        );
-      }
-      print('Admin total: ${admin.length}');
-    }
-  }
-
+  
   @override
   void initState() {
     super.initState();
@@ -173,9 +88,6 @@ class _SignInPageState extends State<SignInPage>
         }
       });
     });
-
-    _getEmpleados();
-    _getAdmin();
   }
 
   double align = -1.0;
@@ -200,8 +112,6 @@ class _SignInPageState extends State<SignInPage>
               children: [
                 DetailSide(
                   animation: _animation,
-                  admin: admin,
-                  empleado: empleados,
                 ),
                 SwitcherSide(
                     animation: _animation,
