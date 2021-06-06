@@ -1,4 +1,5 @@
 class User {
+  String key;
   String apellido;
   String ci;
   String correo;
@@ -9,11 +10,11 @@ class User {
   String preguntaRecuperacion;
   String respuestaRecuperacion;
   String telefono;
-  int cc;
-  int rNro = 0;
+  String cc;
 
   User(
-      {this.apellido,
+      {this.key,
+      this.apellido,
       this.ci,
       this.correo,
       this.domicilio,
@@ -23,6 +24,5 @@ class User {
       this.preguntaRecuperacion,
       this.respuestaRecuperacion,
       this.telefono,
-      this.cc,
-      this.rNro});
+      this.cc});
 }

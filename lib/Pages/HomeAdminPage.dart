@@ -70,9 +70,6 @@ class _HomeAdminPageState extends State<HomeAdminPage> {
   void initState() {
     super.initState();
     Provider.of<UserLogged>(context, listen: false).actualizarMesas();
-    Provider.of<UserLogged>(context, listen: false).actualizarEmpleados();
-    Provider.of<UserLogged>(context, listen: false).actualizarCentroComidaActual();
-    Provider.of<UserLogged>(context, listen: false).actualizarMenu();
   }
 
   @override

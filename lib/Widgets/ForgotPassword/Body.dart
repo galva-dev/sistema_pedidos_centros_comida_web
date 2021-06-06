@@ -116,7 +116,7 @@ class _BodyState extends State<Body> {
                                 child: TextButton(
                                   onPressed: () {
                                     //todo CODIGO DE LA ACTUALIZACION DE LA CONTRA
-                                    FirebaseCrud.modificarPassword(context, nuevaContrasenia, this.widget.usuario.cc, this.widget.usuario.rNro);
+                                    FirebaseCrud.modificarPassword(context, nuevaContrasenia, this.widget.usuario.key, this.widget.usuario.cc);
                                   },
                                   style: ButtonStyle(
                                     backgroundColor:
