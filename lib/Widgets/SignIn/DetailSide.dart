@@ -8,7 +8,6 @@ import 'package:sistema_registro_pedidos_web/Providers/UserLogged.dart';
 import 'package:sistema_registro_pedidos_web/Widgets/Alertas/AdvancedAlertDialog.dart';
 import 'package:http/http.dart' as http;
 
-
 class DetailSide extends StatefulWidget {
   final Animation<double> _animation;
 
@@ -172,6 +171,7 @@ class _DetailSideState extends State<DetailSide> {
                         admin.forEach((element) {
                           if (element.ci == ci) {
                             User usuario = User(
+                              key: element.key,
                               apellido: element.apellido,
                               cc: element.cc,
                               ci: element.ci,
@@ -224,19 +224,18 @@ class _DetailSideState extends State<DetailSide> {
                         empleados.forEach((element) {
                           if (element.ci == ci) {
                             User usuario = User(
-                              apellido: element.apellido,
-                              cc: element.cc,
-                              ci: element.ci,
-                              correo: element.correo,
-                              domicilio: element.domicilio,
-                              horario: element.horario,
-                              nombre: element.nombre,
-                              password: element.password,
-                              preguntaRecuperacion: element.preguntaRecuperacion,
-                              respuestaRecuperacion: element.respuestaRecuperacion,
-                              telefono: element.telefono,
-                              rNro: element.rNro
-                            );
+                                key: element.key,
+                                apellido: element.apellido,
+                                cc: element.cc,
+                                ci: element.ci,
+                                correo: element.correo,
+                                domicilio: element.domicilio,
+                                horario: element.horario,
+                                nombre: element.nombre,
+                                password: element.password,
+                                preguntaRecuperacion: element.preguntaRecuperacion,
+                                respuestaRecuperacion: element.respuestaRecuperacion,
+                                telefono: element.telefono);
                             _userLogged.typeUser = 'Empleado';
                             Navigator.push(
                               context,
@@ -284,6 +283,7 @@ class _DetailSideState extends State<DetailSide> {
                           if (element.ci == ci) {
                             if (element.password == password) {
                               _userLogged.userActually = User(
+                                key: element.key,
                                 apellido: element.apellido,
                                 cc: element.cc,
                                 ci: element.ci,
@@ -336,6 +336,7 @@ class _DetailSideState extends State<DetailSide> {
                           if (element.ci == ci) {
                             if (element.password == password) {
                               _userLogged.userActually = User(
+                                  key: element.key,
                                   apellido: element.apellido,
                                   cc: element.cc,
                                   ci: element.ci,

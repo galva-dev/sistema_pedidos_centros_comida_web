@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:sistema_registro_pedidos_web/Models/Food.dart';
 import 'package:sistema_registro_pedidos_web/Models/Mesas.dart';
 import 'package:sistema_registro_pedidos_web/Providers/UserLogged.dart';
-import 'package:sistema_registro_pedidos_web/Widgets/Alertas/AlertaAgregarMesa.dart';
-import 'package:sistema_registro_pedidos_web/Widgets/Alertas/AlertaEliminarMesa.dart';
-import 'package:sistema_registro_pedidos_web/Widgets/Alertas/AlertaModificarMesa.dart';
+import 'package:sistema_registro_pedidos_web/Widgets/Alertas/Mesas/AlertaAgregarMesa.dart';
+import 'package:sistema_registro_pedidos_web/Widgets/Alertas/Mesas/AlertaEliminarMesa.dart';
+import 'package:sistema_registro_pedidos_web/Widgets/Alertas/Mesas/AlertaModificarMesa.dart';
 
 class HomeAdminMesas extends StatefulWidget {
   HomeAdminMesas({Key key}) : super(key: key);
@@ -52,6 +52,7 @@ class _HomeAdminMesasState extends State<HomeAdminMesas> {
                 decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.5), borderRadius: BorderRadius.circular(100)),
                 child: ListView.separated(
+                  physics: BouncingScrollPhysics(),
                   separatorBuilder: (_, _a) => SizedBox(
                     width: 50,
                   ),

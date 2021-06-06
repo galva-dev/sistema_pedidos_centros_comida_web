@@ -1,4 +1,5 @@
 class CentroComida {
+  String key;
   String banner;
   String descripcion;
   String direccion;
@@ -9,6 +10,7 @@ class CentroComida {
   int tipo;
 
   CentroComida({
+    this.key,
     this.banner,
     this.descripcion,
     this.direccion,

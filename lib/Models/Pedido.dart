@@ -1,6 +1,7 @@
 import 'package:sistema_registro_pedidos_web/Models/Food.dart';
 
 class Pedido {
+  String key;
   String codigo;
   String ciRecepcionista;
   String estado;
@@ -14,6 +15,7 @@ class Pedido {
   String usuarioUsername;
 
   Pedido({
+    this.key,
     this.codigo,
     this.ciRecepcionista,
     this.estado,

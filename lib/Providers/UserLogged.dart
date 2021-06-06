@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_db_web_unofficial/firebasedbwebunofficial.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:sistema_registro_pedidos_web/Models/CentroComida.dart';
@@ -8,327 +9,26 @@ import 'package:sistema_registro_pedidos_web/Models/Pedido.dart';
 import 'package:sistema_registro_pedidos_web/Models/User.dart';
 
 class UserLogged with ChangeNotifier {
-  int _nroCentro = 0;
+  String _keyCentro = "";
   bool _isLogged;
   String _typeUser = "none";
+
   User _userActually = User();
 
-  CentroComida _centroComidaActual = CentroComida();
-  User _admin = User();
   List<User> _recepcionistas = [];
   List<Food> _bebidas = [];
   List<Food> _menu = [];
   List<Mesas> _mesas = [];
   List<Pedido> _pedidos = [];
-
   List<User> loginempleados = [];
   List<User> loginadmin = [];
 
-  Future getEmpleados() async {
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      loginempleados.clear();
-      for (int i = 1; i <= jsonData.length; i++) {
-        for (int j = 1; j <= jsonData['CC$i']['Recepcionistas'].length; j++) {
-          loginempleados.add(
-            User(
-              nombre: jsonData['CC$i']['Recepcionistas']['R$j']['nombre'].toString(),
-              apellido: jsonData['CC$i']['Recepcionistas']['R$j']['apellido'].toString(),
-              ci: jsonData['CC$i']['Recepcionistas']['R$j']['ci'].toString(),
-              correo: jsonData['CC$i']['Recepcionistas']['R$j']['correo'].toString(),
-              domicilio: jsonData['CC$i']['Recepcionistas']['R$j']['domicilio'].toString(),
-              horario: jsonData['CC$i']['Recepcionistas']['R$j']['horario'].toString(),
-              password: jsonData['CC$i']['Recepcionistas']['R$j']['password'].toString(),
-              preguntaRecuperacion:
-                  jsonData['CC$i']['Recepcionistas']['R$j']['preguntaRecuperacion'].toString(),
-              respuestaRecuperacion:
-                  jsonData['CC$i']['Recepcionistas']['R$j']['respuestaRecuperacion'].toString(),
-              telefono: jsonData['CC$i']['Recepcionistas']['R$j']['telefono'].toString(),
-              cc: jsonData['CC$i']['Recepcionistas']['R$j']['cc'],
-              rNro: jsonData['CC$i']['Recepcionistas']['R$j']['rNro'],
-            ),
-          );
-        }
-      }
-    }
-    print('Empleados total: ${loginempleados.length}');
-  }
-
-  Future getAdmin() async {
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      loginadmin.clear();
-      for (int i = 1; i <= jsonData.length; i++) {
-        loginadmin.add(
-          User(
-            nombre: jsonData['CC$i']['Admin']['nombre'].toString(),
-            apellido: jsonData['CC$i']['Admin']['apellido'].toString(),
-            ci: jsonData['CC$i']['Admin']['ci'].toString(),
-            correo: jsonData['CC$i']['Admin']['correo'].toString(),
-            domicilio: jsonData['CC$i']['Admin']['domicilio'].toString(),
-            horario: jsonData['CC$i']['Admin']['horario'].toString(),
-            password: jsonData['CC$i']['Admin']['password'].toString(),
-            preguntaRecuperacion: jsonData['CC$i']['Admin']['preguntaRecuperacion'].toString(),
-            respuestaRecuperacion: jsonData['CC$i']['Admin']['respuestaRecuperacion'].toString(),
-            telefono: jsonData['CC$i']['Admin']['telefono'].toString(),
-            cc: jsonData['CC$i']['Admin']['cc'],
-          ),
-        );
-      }
-      print('Admin total: ${loginadmin.length}');
-    }
-  }
-
-  Future actualizarCentroComidaActual() async {
-    CentroComida centro = CentroComida();
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      centro = CentroComida(
-        banner: jsonData['CC$_nroCentro']['banner'],
-        descripcion: jsonData['CC$_nroCentro']['descripcion'],
-        direccion: jsonData['CC$_nroCentro']['direccion'],
-        horario: jsonData['CC$_nroCentro']['horario'],
-        logo: jsonData['CC$_nroCentro']['logo'],
-        nombre: jsonData['CC$_nroCentro']['nombre'],
-        numero: jsonData['CC$_nroCentro']['numero'],
-        tipo: jsonData['CC$_nroCentro']['tipo'],
-      );
-    }
-    _centroComidaActual = centro;
-    notifyListeners();
-    print('Datos centro comida actual actualizado');
-  }
-
-  Future actualizarAdmin() async {
-    User admin = User();
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      admin = User(
-        nombre: jsonData['CC$_nroCentro']['Admin']['nombre'],
-        apellido: jsonData['CC$_nroCentro']['Admin']['apellido'],
-        cc: jsonData['CC$_nroCentro']['Admin']['cc'],
-        ci: jsonData['CC$_nroCentro']['Admin']['ci'],
-        correo: jsonData['CC$_nroCentro']['Admin']['correo'],
-        domicilio: jsonData['CC$_nroCentro']['Admin']['domicilio'],
-        password: jsonData['CC$_nroCentro']['Admin']['password'],
-        preguntaRecuperacion: jsonData['CC$_nroCentro']['Admin']['preguntaRecuperacion'],
-        respuestaRecuperacion: jsonData['CC$_nroCentro']['Admin']['respuestaRecuperacion'],
-        telefono: jsonData['CC$_nroCentro']['Admin']['telefono'],
-      );
-    }
-    _admin = admin;
-    notifyListeners();
-    print('Datos del admin del centro de comida actualizado');
-  }
-
-  Future actualizarEmpleados() async {
-    _recepcionistas.clear();
-    List<User> empleados = [];
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      empleados.clear();
-      for (int j = 1; j <= jsonData['CC$_nroCentro']['Recepcionistas'].length; j++) {
-        empleados.add(
-          User(
-            nombre: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['nombre'].toString(),
-            apellido: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['apellido'].toString(),
-            ci: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['ci'].toString(),
-            correo: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['correo'].toString(),
-            domicilio: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['domicilio'].toString(),
-            horario: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['horario'].toString(),
-            password: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['password'].toString(),
-            preguntaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['preguntaRecuperacion']
-                .toString(),
-            respuestaRecuperacion: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']
-                    ['respuestaRecuperacion']
-                .toString(),
-            telefono: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['telefono'].toString(),
-            cc: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['cc'],
-            rNro: jsonData['CC$_nroCentro']['Recepcionistas']['R$j']['rNro'],
-          ),
-        );
-      }
-    }
-    _recepcionistas = empleados;
-    notifyListeners();
-    print('Lista de empleados actualizados');
-  }
-
-  Future actualizarBebidas() async {
-    _bebidas.clear();
-    List<Food> bebidas = [];
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      for (int j = 1; j <= jsonData['CC$_nroCentro']['Bebidas'].length; j++) {
-        bebidas.add(
-          Food(
-            descripcion: jsonData['CC$_nroCentro']['Bebidas']['B$j']['descripcion'],
-            img: jsonData['CC$_nroCentro']['Bebidas']['B$j']['img'],
-            nombre: jsonData['CC$_nroCentro']['Bebidas']['B$j']['nombre'],
-            precio: double.parse(jsonData['CC$_nroCentro']['Bebidas']['B$j']['precio']),
-          ),
-        );
-      }
-    }
-    _bebidas = bebidas;
-    notifyListeners();
-    print('Lista de mesas actualizada');
-  }
-
-  Future actualizarMenu() async {
-    _menu.clear();
-    List<Food> menu = [];
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      for (int j = 1; j <= jsonData['CC$_nroCentro']['Menu'].length; j++) {
-        menu.add(
-          Food(
-            descripcion: jsonData['CC$_nroCentro']['Menu']['C$j']['descripcion'].toString(),
-            img: jsonData['CC$_nroCentro']['Menu']['C$j']['img'].toString(),
-            nombre: jsonData['CC$_nroCentro']['Menu']['C$j']['nombre'].toString(),
-            precio: double.parse(jsonData['CC$_nroCentro']['Menu']['C$j']['precio'].toString()),
-          ),
-        );
-      }
-    }
-    _menu = menu;
-    notifyListeners();
-    print('Lista de menu actualizada');
-  }
-
-  Future actualizarMesas() async {
-    _mesas.clear();
-    List<Mesas> mesas = [];
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      for (int j = 1; j <= jsonData['CC$_nroCentro']['Mesas'].length; j++) {
-        mesas.add(Mesas(
-          nro: jsonData['CC$_nroCentro']['Mesas']['M$j']['nro'],
-          disponible: jsonData['CC$_nroCentro']['Mesas']['M$j']['disponible'],
-        ));
-      }
-    }
-    _mesas = mesas;
-    notifyListeners();
-    print('Lista de mesas actualizada');
-  }
-
-  Future actualizarPedidos() async {
-    List<Food> comida = [];
-
-    final uri =
-        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
-    final response = await http.get(uri);
-
-    if (response.statusCode == 200) {
-      String body =
-          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
-      Map jsonData = json.decode(body);
-
-      _pedidos.clear();
-      for (int i = 1; i <= jsonData['CC$_nroCentro']['Pedidos'].length; i++) {
-        for (int j = 1; j <= jsonData['CC$_nroCentro']['Pedidos']['P$i']['Comidas'].length; j++) {
-          comida.add(
-            Food(
-                nombre: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['nombre'].toString(),
-                descripcion:
-                    jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['descripcion'].toString(),
-                img: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['img'].toString(),
-                precio:
-                    double.parse(jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['precio']),
-                cantidad: jsonData['CC$i']['Pedidos']['P$i']['Comidas']['C$j']['cantidad']),
-          );
-        }
-
-        _pedidos.add(Pedido(
-          ciRecepcionista: jsonData['CC$_nroCentro']['Pedidos']['P$i']['ciRecepcionista'],
-          codigo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['codigo'],
-          comidas: comida,
-          estado: jsonData['CC$_nroCentro']['Pedidos']['P$i']['estado'],
-          fecha: jsonData['CC$_nroCentro']['Pedidos']['P$i']['fecha'],
-          hora: jsonData['CC$_nroCentro']['Pedidos']['P$i']['hora'],
-          nroMesa: jsonData['CC$_nroCentro']['Pedidos']['P$i']['nro'],
-          tiempo: jsonData['CC$_nroCentro']['Pedidos']['P$i']['tiempo'],
-          total: double.parse(jsonData['CC$_nroCentro']['Pedidos']['P$i']['total']),
-          usuarioEmail: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['email'],
-          usuarioUsername: jsonData['CC$_nroCentro']['Pedidos']['P$i']['Usuario']['username'],
-        ));
-        comida.clear();
-      }
-    }
-    notifyListeners();
-    print('Pedidos actualizados');
-  }
-
   UserLogged(this._isLogged);
 
-  int get nroCentro => _nroCentro;
+  get keyCentro => _keyCentro;
 
-  set nroCentro(int value) {
-    _nroCentro = value;
+  set keyCentro(String value) {
+    _keyCentro = value;
   }
 
   bool get isLogged => _isLogged;
@@ -348,19 +48,7 @@ class UserLogged with ChangeNotifier {
 
   set userActually(User value) {
     _userActually = value;
-    _nroCentro = value.cc;
-  }
-
-  CentroComida get centroComidaActual => _centroComidaActual;
-
-  set centroComidaActual(CentroComida value) {
-    _centroComidaActual = value;
-  }
-
-  User get admin => _admin;
-
-  set admin(User value) {
-    _admin = value;
+    _keyCentro = value.cc;
   }
 
   List<User> get recepcionistas => _recepcionistas;
@@ -405,4 +93,109 @@ class UserLogged with ChangeNotifier {
   List<User> get getLoginadmin => this.loginadmin;
 
   set setLoginadmin(loginadmin) => this.loginadmin = loginadmin;
+
+  Future getEmpleados() async {
+    loginempleados.clear();
+    final db = FirebaseDatabaseWeb.instance.reference().child('CentroComida');
+    await db.once().then((value) {
+      Map centrosComidaJson = value.value;
+      centrosComidaJson.forEach((keyCC, valueCC) async {
+        await db.child(keyCC.toString()).child('Recepcionistas').once().then((value) {
+          Map recepcionistasJson = value.value;
+          recepcionistasJson.forEach((keyR, valueR) {
+            loginempleados.add(User(
+                key: keyR.toString(),
+                apellido: valueR['apellido'],
+                cc: valueR['cc'],
+                ci: valueR['ci'],
+                correo: valueR['correo'],
+                domicilio: valueR['domicilio'],
+                horario: valueR['horario'],
+                nombre: valueR['nombre'],
+                password: valueR['password'],
+                preguntaRecuperacion: valueR['preguntaRecuperacion'],
+                respuestaRecuperacion: valueR['respuestaRecuperacion'],
+                telefono: valueR['telefono']));
+          });
+        }).then((value) => print('Empleados total: ${loginempleados.length}'));
+      });
+    });
+  }
+
+  Future getAdmin() async {
+    loginadmin.clear();
+    final db = FirebaseDatabaseWeb.instance.reference().child('CentroComida');
+    await db.once().then((value) {
+      Map centrosComidaJson = value.value;
+      centrosComidaJson.forEach((keyCC, valueCC) async {
+        await db.child(keyCC.toString()).child('Admin').once().then((value) {
+          Map adminJson = value.value;
+          loginadmin.add(User(
+              key: 'noKey',
+              apellido: adminJson['apellido'].toString(),
+              cc: adminJson['cc'].toString(),
+              ci: adminJson['ci'].toString(),
+              correo: adminJson['correo'].toString(),
+              domicilio: adminJson['domicilio'].toString(),
+              nombre: adminJson['nombre'].toString(),
+              password: adminJson['password'].toString(),
+              preguntaRecuperacion: adminJson['preguntaRecuperacion'].toString(),
+              respuestaRecuperacion: adminJson['respuestaRecuperacion'].toString(),
+              telefono: adminJson['telefono'].toString()));
+        }).then((value) => print('Admin total: ${loginadmin.length}'));
+      });
+    });
+  }
+
+  Future actualizarMesas() async {
+    _mesas.clear();
+    List<Mesas> mesas = [];
+
+    final uri =
+        Uri.parse("https://sistemaregistropedidos-default-rtdb.firebaseio.com/CentroComida.json");
+    final response = await http.get(uri);
+
+    if (response.statusCode == 200) {
+      String body =
+          utf8.decode(response.bodyBytes); // para mostrar caracteres especiales sin simbolos raros
+      Map jsonData = json.decode(body);
+
+      for (int j = 1; j <= jsonData[_keyCentro]['Mesas'].length; j++) {
+        mesas.add(Mesas(
+          nro: jsonData[_keyCentro]['Mesas']['M$j']['nro'],
+          disponible: jsonData[_keyCentro]['Mesas']['M$j']['disponible'],
+        ));
+      }
+    }
+    _mesas = mesas;
+    notifyListeners();
+    print('Lista de mesas actualizada');
+  }
+
+  Future actualizarEmpleados() async {
+    _recepcionistas.clear();
+
+    final db = FirebaseDatabaseWeb.instance.reference().child('CentroComida');
+    await db.child(_keyCentro).child('Recepcionistas').once().then((value) {
+      Map recepcionistasJson = value.value;
+      recepcionistasJson.forEach((key, value) {
+        _recepcionistas.add(User(
+          key: key.toString(),
+          apellido: value['apellido'],
+          cc: value['cc'],
+          ci: value['ci'],
+          correo: value['correo'],
+          domicilio: value['domicilio'],
+          horario: value['horario'],
+          nombre: value['nombre'],
+          password: value['password'],
+          preguntaRecuperacion: value['preguntaRecuperacion'],
+          respuestaRecuperacion: value['respuestaRecuperacion'],
+          telefono: value['telefono'],
+        ));
+      });
+    });
+    notifyListeners();
+    print('Lista de empleados actualizada');
+  }
 }
